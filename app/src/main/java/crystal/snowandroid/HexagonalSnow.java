@@ -1,15 +1,17 @@
 package crystal.snowandroid;
 
+import android.util.Log;
+
 public class HexagonalSnow extends Snow {
     protected final float SQRT3 = 1.732050808f;
-    protected final int PIXEL_GRID_SIZE_X = 800;
+    protected final int PIXEL_GRID_SIZE_X = 1000;
     protected final int PIXEL_GRID_SIZE_Y = (int) (PIXEL_GRID_SIZE_X / SQRT3);
-    protected final float PIXEL_TO_FIGURE_RATIO = 4.0f;
+    protected final float PIXEL_TO_FIGURE_RATIO = 3.0f;
 
     private final byte SIX = 6;
     private final int[][] HEXAGONAL_NEIGHBOR = { {-1, 1}, {-1, -1}, {1, -1}, {1, 1}, {0, 2}, {0, -2} };
     protected final short WATER_CONTENT_MAX = 108; //Multiple of 6, <32767.
-    protected final short WATER_LOSS_RATIO = 3;
+    protected final short WATER_LOSS_RATIO = 4;
 
     public HexagonalSnow() {
         snowPixel = new short[PIXEL_GRID_SIZE_X][PIXEL_GRID_SIZE_Y];
@@ -22,10 +24,9 @@ public class HexagonalSnow extends Snow {
                 }
             }
         }
-        snowPixel[PIXEL_GRID_SIZE_X / 2][PIXEL_GRID_SIZE_Y / 2 - 20] = -1;
-        snowPixel[PIXEL_GRID_SIZE_X / 2 + 10][PIXEL_GRID_SIZE_Y / 2 - 20] = -1;
         time = 0;
-        waterRecoverySpeed = 70;
+        waterRecoverySpeed = 20;
+        waterAverageTime = 5;
         if (waterRecoverySpeed > WATER_CONTENT_MAX / 2) {
             waterRecoverySpeed = WATER_CONTENT_MAX / 2;
         }
@@ -49,6 +50,7 @@ public class HexagonalSnow extends Snow {
     public void timePass() {
         expendSnow();
         waterRecovery();
+        waterAverage(waterAverageTime);
         time++;
     }
 
@@ -156,13 +158,54 @@ public class HexagonalSnow extends Snow {
     }
 
     @Override
+    public void waterAverage(int times) {
+        for (int i = 0; i < times; i++) {
+            waterAverage();
+        }
+    }
+
+    @Override
+    public void waterAverage() {
+        short[][] tempSnowPixel = arrayDeepCopy(snowPixel);
+        for (int i = 0; i < PIXEL_GRID_SIZE_X; i++) {
+            for (int j = 0; j < PIXEL_GRID_SIZE_Y; j++) {
+                if ((i + j) % 2 == 0 && snowPixel[i][j] >= 0) {
+                    waterAverageHexagonal(i, j, tempSnowPixel);
+                }
+            }
+        }
+        snowPixel = tempSnowPixel;
+    }
+
+    private void waterAverageHexagonal(int ix, int iy, short[][] newSnowPixel) {
+        if (ix <= 0 || ix >= PIXEL_GRID_SIZE_X - 1 || iy <= 1 || iy >= PIXEL_GRID_SIZE_Y - 2) {
+            return;
+        }
+        if (snowPixel[ix][iy] < 0) {
+            return;
+        }
+        short waterNeighborCount = 1;
+        short neighborWaterTotal = snowPixel[ix][iy];
+        for (int i = 0; i < SIX; i++) {
+            int ixNeighbor = ix + HEXAGONAL_NEIGHBOR[i][0], iyNeighbor = iy + HEXAGONAL_NEIGHBOR[i][1];
+            try {
+                if (snowPixel[ixNeighbor][iyNeighbor] >= 0) {
+                    waterNeighborCount++;
+                    neighborWaterTotal += snowPixel[ixNeighbor][iyNeighbor];
+                }
+            } catch (ArrayIndexOutOfBoundsException outOfBound) {}
+        }
+        newSnowPixel[ix][iy] = (short) (neighborWaterTotal / waterNeighborCount);
+    }
+
+    @Override
     public int[] project(final int width, final int height) {
-        final float widthConvertRatio = 1.0f  / PIXEL_TO_FIGURE_RATIO / SQRT3 / width * PIXEL_GRID_SIZE_X;
-        final float heightConvertRatio = 1.0f  / PIXEL_TO_FIGURE_RATIO / height * PIXEL_GRID_SIZE_Y;
+        final float widthConvertRatio = 1.0f / PIXEL_TO_FIGURE_RATIO / SQRT3 / width * PIXEL_GRID_SIZE_X;
+        final float heightConvertRatio = 1.0f / PIXEL_TO_FIGURE_RATIO / height * PIXEL_GRID_SIZE_Y;
 
         int[] snowFigureColor = new int[width * height];
         for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) { //Flip x - y.
+            for (int j = 0; j < width; j++) { //Flip x,y
                 int i_projected = Math.round((j - width / 2) * widthConvertRatio + PIXEL_GRID_SIZE_X / 2);
                 int j_projected = Math.round((i - height / 2) * heightConvertRatio + PIXEL_GRID_SIZE_Y / 2);
                 if ((i_projected + j_projected) % 2 != 0) {
@@ -182,5 +225,18 @@ public class HexagonalSnow extends Snow {
             }
         }
         return snowFigureColor;
+    }
+
+    public void generateSnow(float fractionX, float fractionY) {
+        int ix = Math.round(fractionX * PIXEL_GRID_SIZE_X / PIXEL_TO_FIGURE_RATIO / SQRT3 + PIXEL_GRID_SIZE_X / 2);
+        int iy = Math.round(fractionY * PIXEL_GRID_SIZE_Y / PIXEL_TO_FIGURE_RATIO + PIXEL_GRID_SIZE_Y / 2);
+        if ((ix + iy) % 2 != 0) {
+            ix++;
+        }
+        if (ix < 0 || ix >= PIXEL_GRID_SIZE_X || iy < 0 || iy >= PIXEL_GRID_SIZE_Y) {
+            snowPixel[PIXEL_GRID_SIZE_X / 2][PIXEL_GRID_SIZE_Y / 2 - 40] = -1;
+            return;
+        }
+        this.snowPixel[ix][iy] = -1;
     }
 }
