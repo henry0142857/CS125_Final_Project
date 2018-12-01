@@ -239,4 +239,34 @@ public class HexagonalSnow extends Snow {
         }
         this.snowPixel[ix][iy] = -1;
     }
+
+    /* For test in Java only, plot in a new window.
+    public static void main(String[] unused) {
+        Snow snow = new HexagonalSnow();
+        //Graphic part.
+        JFrame jFrame = new JFrame();
+        for (int t = 0; t < 150; t++) {
+            snow.timePass();
+            JPanel jpanel = new JPanel() {
+                @Override
+                public void paint(Graphics graphics) {
+                    super.paint(graphics);
+                    for (int i = 0; i < PIXEL_GRID_SIZE_X; i++) {
+                        for (int j = 0; j < PIXEL_GRID_SIZE_Y; j++) {
+                            if (snow.getSnowPixel()[i][j] < 0) {
+                                graphics.drawOval((int) (i * SQRT3), j, 2, 2);
+                            }
+                        }
+                    }
+                }
+            };
+            jFrame.add(jpanel);
+            jFrame.setSize((int) (PIXEL_GRID_SIZE_X * SQRT3), PIXEL_GRID_SIZE_Y);
+            jFrame.setVisible(true);
+            try {
+                Thread.sleep(200);
+            } catch (Exception e) {}
+        }
+    }
+    */
 }
