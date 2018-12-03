@@ -44,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
         pauseImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (ifTimePass) {
+                    pauseImageButton.setImageResource(R.drawable.run);
+                } else {
+                    pauseImageButton.setImageResource(R.drawable.pause);
+                }
                 ifTimePass = !ifTimePass;
             }
         });
