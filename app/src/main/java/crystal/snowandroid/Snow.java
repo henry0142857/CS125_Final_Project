@@ -4,9 +4,10 @@ import android.graphics.Bitmap;
 public abstract class Snow {
     private final static int FIGURE_GRID_SIZE_X = 900;
     private final static int FIGURE_GRID_SIZE_Y = 1200;
+    protected final int MAX_AVERAGE_TIMES = 5;
     //(A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff)
     final int iceColor = (0xff & 0xff) << 24 | (0xff & 0xff) << 16 | (0xff & 0xff) << 8 | (0xff & 0xff); //White
-    final int backgroundColor = (0x8f & 0xff) << 24 | (0 & 0xff) << 16 | (0 & 0xff) << 8 | (0xff & 0xff); //Blue
+    final int backgroundColor = (0x00 & 0xff) << 24 | (0 & 0xff) << 16 | (0 & 0xff) << 8 | (0xff & 0xff); //Blue
     final int errorColor = (0xff & 0xff) << 24 | (0xff & 0xff) << 16 | (0 & 0xff) << 8 | (0 & 0xff); //Red
 
     protected short[][] snowPixel;
@@ -32,11 +33,24 @@ public abstract class Snow {
 
     public abstract void waterRecovery();
 
-    public abstract void timePass(int time);
+    public void timePass() {
+        expendSnow();
+        waterRecovery();
+        waterAverage(waterAverageTime);
+        time++;
+    }
 
-    public abstract void timePass();
+    public void timePass(int time) {
+        for (int i = 0; i < time; i++) {
+            timePass();
+        }
+    }
 
-    public abstract void waterAverage(int times);
+    public void waterAverage(int times) {
+        for (int i = 0; i < times; i++) {
+            waterAverage();
+        }
+    }
 
     public abstract void waterAverage();
 
@@ -54,6 +68,27 @@ public abstract class Snow {
         float fractionX = (x - ImageX - ImageWidth / 2) / ImageWidth;
         float fractionY = (y - ImageY - ImageHeight / 2) / ImageHeight;
         generateSnow(fractionY, fractionX); //Flip x,y
+    }
+
+    public abstract void waterSeekBar(float waterSeekBarRatio);
+
+    public abstract float getInitialWaterRatio();
+
+    public abstract void clear();
+
+    public int getMaxAverageTimes() {
+        return MAX_AVERAGE_TIMES;
+    }
+
+    public int getInitialAverageTimes() {
+        return this.waterAverageTime;
+    }
+
+    public void setAverageTimes(int setAverage) {
+        this.waterAverageTime = setAverage;
+        if (this.waterAverageTime > MAX_AVERAGE_TIMES) {
+            this.waterAverageTime = MAX_AVERAGE_TIMES;
+        }
     }
 
     protected static short[][] arrayDeepCopy(short[][] array) {
