@@ -1,8 +1,6 @@
-package crystal.snowandroid;
+ package crystal.snowandroid;
 
-import android.util.Log;
-
-public class HexagonalSnow extends Snow {
+ public class HexagonalSnow extends Snow {
     protected final float SQRT3 = 1.732050808f;
     protected final int PIXEL_GRID_SIZE_X = 1000;
     protected final int PIXEL_GRID_SIZE_Y = (int) (PIXEL_GRID_SIZE_X / SQRT3);
@@ -25,15 +23,23 @@ public class HexagonalSnow extends Snow {
             }
         }
         time = 0;
-        waterRecoverySpeed = 60;
-        if (waterRecoverySpeed > WATER_CONTENT_MAX / 2) {
-            waterRecoverySpeed = WATER_CONTENT_MAX / 2;
-        }
+        initializeWaterRecoverySpeed(MAX_HUMIDITY);
         waterAverageTime = 0;
         if (waterAverageTime > MAX_AVERAGE_TIMES) {
             waterAverageTime = MAX_AVERAGE_TIMES;
         }
         checkHexagonalGrid();
+    }
+
+    @Override
+    public void initializeWaterRecoverySpeed(double humidity) {
+        if (humidity < 0) {
+            return;
+        }
+        waterRecoverySpeed = (int) Math.round(humidity / MAX_HUMIDITY * WATER_CONTENT_MAX / 2);
+        if (waterRecoverySpeed > WATER_CONTENT_MAX / 2) {
+            waterRecoverySpeed = WATER_CONTENT_MAX / 2;
+        }
     }
 
     private void checkHexagonalGrid() {
@@ -235,9 +241,9 @@ public class HexagonalSnow extends Snow {
     public float getInitialWaterRatio() {
         float toReturn = 1.0f * this.waterRecoverySpeed / WATER_CONTENT_MAX * 2;
         if (toReturn > 1) {
-            return toReturn;
+            return 1.0f;
         }
-        return 1.0f;
+        return toReturn;
     }
 
     @Override

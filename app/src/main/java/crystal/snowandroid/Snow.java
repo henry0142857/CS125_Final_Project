@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 public abstract class Snow {
     private final static int FIGURE_GRID_SIZE_X = 900;
     private final static int FIGURE_GRID_SIZE_Y = 1200;
+    protected final double MAX_HUMIDITY = 100.0;
     protected final int MAX_AVERAGE_TIMES = 5;
     //(A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff)
     final int iceColor = (0xff & 0xff) << 24 | (0xff & 0xff) << 16 | (0xff & 0xff) << 8 | (0xff & 0xff); //White
@@ -21,6 +22,8 @@ public abstract class Snow {
         waterRecoverySpeed = 0;
         waterAverageTime = 0;
     }
+
+    public abstract void initializeWaterRecoverySpeed(double humidity);
 
     public short[][] getSnowPixel() {
         if (snowPixel == null) {
