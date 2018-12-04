@@ -167,6 +167,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        Log.d("SnowTag", "x= " + Float.toString(event.getX()) + "  y= " + Float.toString(event.getY()));
+        Log.d("SnowTag", "ImageX= " + Float.toString(snowImageCopy.getX()) + "  ImageY= " + Float.toString(snowImageCopy.getY()));
+        Log.d("SnowTag", "ImageWidth= " + Float.toString(snowImageCopy.getWidth()) + "  ImageHeight= " + Float.toString(snowImageCopy.getHeight()));
         snow.onTouch(event.getX(), event.getY(),
                 snowImageCopy.getWidth(), snowImageCopy.getHeight(), snowImageCopy.getX(), snowImageCopy.getY() + actionbarHeight);
         return true;

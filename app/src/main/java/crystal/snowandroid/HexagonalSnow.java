@@ -2,8 +2,8 @@
 
  public class HexagonalSnow extends Snow {
     protected final float SQRT3 = 1.732050808f;
-    protected final int PIXEL_GRID_SIZE_X = 1000;
-    protected final int PIXEL_GRID_SIZE_Y = (int) (PIXEL_GRID_SIZE_X / SQRT3);
+    protected final int PIXEL_GRID_SIZE_X = 1200;
+    protected final int PIXEL_GRID_SIZE_Y = Math.round(PIXEL_GRID_SIZE_X / SQRT3);
     protected final float PIXEL_TO_FIGURE_RATIO = 3.0f;
 
     private final byte SIX = 6;
@@ -214,8 +214,8 @@
 
     @Override
     public void generateSnow(float fractionX, float fractionY) {
-        int ix = Math.round(fractionX * PIXEL_GRID_SIZE_X / PIXEL_TO_FIGURE_RATIO / SQRT3 + PIXEL_GRID_SIZE_X / 2);
-        int iy = Math.round(fractionY * PIXEL_GRID_SIZE_Y / PIXEL_TO_FIGURE_RATIO + PIXEL_GRID_SIZE_Y / 2);
+        int ix = (int) Math.round(fractionX * PIXEL_GRID_SIZE_X / PIXEL_TO_FIGURE_RATIO / SQRT3 + PIXEL_GRID_SIZE_X / 2);
+        int iy = (int) Math.round(fractionY * PIXEL_GRID_SIZE_Y / PIXEL_TO_FIGURE_RATIO + PIXEL_GRID_SIZE_Y / 2);
         if ((ix + iy) % 2 != 0) {
             ix++;
         }

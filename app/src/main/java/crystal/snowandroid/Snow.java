@@ -2,7 +2,7 @@ package crystal.snowandroid;
 import android.graphics.Bitmap;
 
 public abstract class Snow {
-    private final static int FIGURE_GRID_SIZE_X = 900;
+    private final static int FIGURE_GRID_SIZE_X = 1000;
     private final static int FIGURE_GRID_SIZE_Y = 1200;
     protected final double MAX_HUMIDITY = 100.0; //%
     protected final int MAX_AVERAGE_TIMES = 5;
