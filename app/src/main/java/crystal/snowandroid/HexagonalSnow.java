@@ -24,10 +24,7 @@
         }
         time = 0;
         initializeWaterRecoverySpeed(MAX_HUMIDITY);
-        waterAverageTime = 0;
-        if (waterAverageTime > MAX_AVERAGE_TIMES) {
-            waterAverageTime = MAX_AVERAGE_TIMES;
-        }
+        initializeWaterAverageTimes(0);
         checkHexagonalGrid();
     }
 

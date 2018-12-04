@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
+                //https://openweathermap.org/current#current_JSON
                 String stringURL = "https://api.openweathermap.org/data/2.5/weather?zip=61820,us&APPID=309c73c90ffc17cbcd34e6523e2be0d3";
                 URL weatherURL = new URL(stringURL);
                 HttpURLConnection connection = (HttpURLConnection) weatherURL.openConnection();
@@ -146,15 +147,18 @@ public class MainActivity extends AppCompatActivity {
 
                 JSONObject jsonObject = new JSONObject(result);
                 JSONObject mainObject = jsonObject.getJSONObject("main");
-                double humidity = mainObject.getDouble("humidity");
+                double humidity = mainObject.getDouble("humidity"); //%
                 Log.d("SnowTag","Humidity: " + Double.toString(humidity));
                 snow.initializeWaterRecoverySpeed(humidity);
                 SeekBar waterSeekBar = findViewById(R.id.waterSeekBar);
                 waterSeekBar.setProgress(Math.round(snow.getInitialWaterRatio() * waterSeekBar.getMax()));
 
                 JSONObject windObject = jsonObject.getJSONObject("wind");
-                double windSpeed = windObject.getDouble("speed");
+                double windSpeed = windObject.getDouble("speed"); //m/s
                 Log.d("SnowTag","Wind Speed: " + Double.toString(windSpeed));
+                snow.initializeWaterAverageTimes(windSpeed);
+                SeekBar windSeekBar = findViewById(R.id.windSeekBar);
+                windSeekBar.setProgress(Math.round(snow.getInitialAverageTimes()));
             } catch (Exception allException) {
                 Log.d("SnowTag",allException.toString());
             }

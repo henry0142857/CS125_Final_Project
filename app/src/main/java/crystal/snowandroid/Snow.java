@@ -4,8 +4,9 @@ import android.graphics.Bitmap;
 public abstract class Snow {
     private final static int FIGURE_GRID_SIZE_X = 900;
     private final static int FIGURE_GRID_SIZE_Y = 1200;
-    protected final double MAX_HUMIDITY = 100.0;
+    protected final double MAX_HUMIDITY = 100.0; //%
     protected final int MAX_AVERAGE_TIMES = 5;
+    protected final double MAX_WIND_SPEED = 20; //m/s, https://en.wikipedia.org/wiki/Beaufort_scale
     //(A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff)
     final int iceColor = (0xff & 0xff) << 24 | (0xff & 0xff) << 16 | (0xff & 0xff) << 8 | (0xff & 0xff); //White
     final int backgroundColor = (0x00 & 0xff) << 24 | (0 & 0xff) << 16 | (0 & 0xff) << 8 | (0xff & 0xff); //Blue
@@ -24,6 +25,16 @@ public abstract class Snow {
     }
 
     public abstract void initializeWaterRecoverySpeed(double humidity);
+
+    public void initializeWaterAverageTimes(double windSpeed) {
+        if (windSpeed < 0) {
+            return;
+        }
+        this.waterAverageTime = (int) Math.round(windSpeed / MAX_WIND_SPEED * MAX_AVERAGE_TIMES);
+        if (waterAverageTime > MAX_AVERAGE_TIMES) {
+            waterAverageTime = MAX_AVERAGE_TIMES;
+        }
+    }
 
     public short[][] getSnowPixel() {
         if (snowPixel == null) {
