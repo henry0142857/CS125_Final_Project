@@ -4,74 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBlue"
+    android:background="@drawable/background"
     tools:context=".MainActivity">
 
     <ImageView
         android:id="@+id/snowImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/waterSeekBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/windSeekBar"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@color/colorAccent" />
 
     <SeekBar
         android:id="@+id/waterSeekBar"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="-1dp"
+        android:layout_marginRight="-1dp"
         android:progressTint="@color/colorProgressBar"
         android:thumbTint="@color/colorThumbBar"
+        app:layout_constraintBottom_toTopOf="@+id/windSeekBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/waterImageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/waterImageView" />
 
     <SeekBar
         android:id="@+id/windSeekBar"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:progressTint="@color/colorProgressBar"
         android:thumbTint="@color/colorThumbBar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/windImageView"
-        app:layout_constraintTop_toBottomOf="@+id/waterSeekBar" />
+        app:layout_constraintStart_toEndOf="@+id/windImageView" />
 
     <ImageButton
         android:id="@+id/pauseImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/refreshImageButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/pause" />
 
     <ImageButton
         android:id="@+id/refreshImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pauseImageButton"
         app:srcCompat="@drawable/refresh" />
 
     <ImageView
         android:id="@+id/waterImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/windImageView"
         app:layout_constraintStart_toEndOf="@+id/pauseImageButton"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/temp" />
+        app:srcCompat="@drawable/water" />
 
     <ImageView
         android:id="@+id/windImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/refreshImageButton"
-        app:layout_constraintTop_toBottomOf="@+id/waterSeekBar"
-        app:srcCompat="@drawable/temp" />
+        app:srcCompat="@drawable/wind" />
 
 </android.support.constraint.ConstraintLayout>

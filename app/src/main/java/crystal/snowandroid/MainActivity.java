@@ -23,7 +23,7 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final static int TIMEDELAY = 0; //millisecond
+    private final static int TIMEDELAY = 100; //millisecond
 
     private boolean ifTimePass;
     private ImageView snowImageCopy;
@@ -46,6 +46,13 @@ public class MainActivity extends AppCompatActivity {
         ifTimePass = true;
         actionbarHeight = 300; //getSupportActionBar().getHeight(); //Not working.
 
+        try {
+            float h = getSupportActionBar().getHeight();
+            Log.d("SnowTag","getSupportActionBar().getHeight() " + Float.toString(h));
+        } catch (Exception e) {
+            Log.d("SnowTag",e.toString());
+        }
+
         new Thread(networkTask).start();
 
         pauseImageButton.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 snow.clear();
                 ifTimePass = true;
+                pauseImageButton.setImageResource(R.drawable.pause);
             }
         });
 
@@ -127,9 +135,9 @@ public class MainActivity extends AppCompatActivity {
                 HttpURLConnection connection = (HttpURLConnection) weatherURL.openConnection();
                 connection.setConnectTimeout(30*1000);
                 connection.setRequestMethod("GET");
-                Log.d("SnowTag","Connection started.");
+                //Log.d("SnowTag","Connection started.");
                 connection.connect();
-                Log.d("SnowTag","Connected.");
+                //Log.d("SnowTag","Connected.");
                 int requestCode = connection.getResponseCode();
                 String requestMessage = connection.getResponseMessage();
                 Log.d("SnowTag","Request state: " + requestMessage);
@@ -167,9 +175,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.d("SnowTag", "x= " + Float.toString(event.getX()) + "  y= " + Float.toString(event.getY()));
-        Log.d("SnowTag", "ImageX= " + Float.toString(snowImageCopy.getX()) + "  ImageY= " + Float.toString(snowImageCopy.getY()));
-        Log.d("SnowTag", "ImageWidth= " + Float.toString(snowImageCopy.getWidth()) + "  ImageHeight= " + Float.toString(snowImageCopy.getHeight()));
+        //Log.d("SnowTag", "x= " + Float.toString(event.getX()) + "  y= " + Float.toString(event.getY()));
+        //Log.d("SnowTag", "ImageX= " + Float.toString(snowImageCopy.getX()) + "  ImageY= " + Float.toString(snowImageCopy.getY()));
+        //Log.d("SnowTag", "ImageWidth= " + Float.toString(snowImageCopy.getWidth()) + "  ImageHeight= " + Float.toString(snowImageCopy.getHeight()));
         snow.onTouch(event.getX(), event.getY(),
                 snowImageCopy.getWidth(), snowImageCopy.getHeight(), snowImageCopy.getX(), snowImageCopy.getY() + actionbarHeight);
         return true;
