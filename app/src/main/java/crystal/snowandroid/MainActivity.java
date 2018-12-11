@@ -1,5 +1,6 @@
 package crystal.snowandroid;
 
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,12 +24,13 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final static int TIMEDELAY = 100; //millisecond
+    private final static int TIMEDELAY = 1000; //millisecond
 
     private boolean ifTimePass;
     private ImageView snowImageCopy;
     private final Snow snow = new HexagonalSnow();
     private float actionbarHeight;
+    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +48,20 @@ public class MainActivity extends AppCompatActivity {
         ifTimePass = true;
         actionbarHeight = 300; //getSupportActionBar().getHeight(); //Not working.
 
+        /*
         try {
             float h = getSupportActionBar().getHeight();
             Log.d("SnowTag","getSupportActionBar().getHeight() " + Float.toString(h));
         } catch (Exception e) {
             Log.d("SnowTag",e.toString());
         }
+        */
 
         new Thread(networkTask).start();
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.bgm);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.setVolume(100,100);
 
         pauseImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,11 +114,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
         });
-
         mainSnowGrowth(snow, snowImage, handler);
     }
 
     private void mainSnowGrowth(final Snow snow, final ImageView snowImage, final Handler handler) {
+        mediaPlayer.start();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
